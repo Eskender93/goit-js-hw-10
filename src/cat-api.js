@@ -1,32 +1,40 @@
-const apiKey =
+const API_KEY =
   'live_5bw3BxNA9WpKzB9hOqnhzpYg7lLInJuSkrwVbgEOYBDOXtq4PG9T5120vuhVnpxP';
 
-// Функція для виконання HTTP-запитів
-async function request(url) {
-  const response = await fetch(url, {
-    headers: {
-      'x-api-key': apiKey,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Request failed');
-  }
-
-  const data = await response.json();
-  return data;
-}
-
-// Функція для отримання списку порід
-export async function fetchBreeds() {
+export function fetchBreeds() {
   const url = 'https://api.thecatapi.com/v1/breeds';
-  const breeds = await request(url);
-  return breeds;
+
+  return fetch(url, {
+    headers: {
+      'x-api-key': API_KEY,
+    },
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Failed to fetch breeds');
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
 
-// Функція для отримання інформації про кота за породою
-export async function fetchCatByBreed(breedId) {
+export function fetchCatByBreed(breedId) {
   const url = `https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}`;
-  const [cat] = await request(url);
-  return cat;
+
+  return fetch(url, {
+    headers: {
+      'x-api-key': API_KEY,
+    },
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Failed to fetch cat by breed');
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
